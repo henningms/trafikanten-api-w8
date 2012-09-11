@@ -1,8 +1,4 @@
-﻿using System;
-using System.Net;
-using System.Windows;
-
-namespace TrafikantenApi.Service.ApiClient
+﻿namespace TrafikantenApi.Service.ApiClient
 {
     public class Paths
     {

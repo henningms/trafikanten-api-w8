@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TrafikantenApi.Helpers
 {
@@ -18,7 +14,7 @@ namespace TrafikantenApi.Helpers
      * *    Free to use!
      */
 
-    public class GeoUTMConverterHelper
+    public class GeoUtmConverterHelper
     {
         public double Latitude { get; set; }
         public double Longitude { get; set; }
@@ -30,7 +26,10 @@ namespace TrafikantenApi.Helpers
         private double pi = 3.14159265358979;
         private double sm_a = 6378137.0;
         private double sm_b = 6356752.314;
-        private double sm_EccSquared = 6.69437999013e-03;
+        
+        // NOT USED IN THIS VERSION
+        //private double sm_EccSquared = 6.69437999013e-03;
+        
         private double UTMScaleFactor = 0.9996;
 
         public enum Hemisphere
@@ -39,35 +38,23 @@ namespace TrafikantenApi.Helpers
             Southern = 1
         }
 
-        public GeoUTMConverterHelper()
+        public void ToUtm(double latitude, double longitude)
         {
+            Latitude = latitude;
+            Longitude = longitude;
 
+            Zone = Math.Floor((longitude + 180.0) / 6) + 1;
+            GeoUTMConverterXY(DegToRad(latitude), DegToRad(longitude), Zone);
         }
 
-        public void ToUTM(double Latitude, double Longitude)
+        public void ToLatLon(double x, double y, int zone, Hemisphere hemi)
         {
-            this.Latitude = Latitude;
-            this.Longitude = Longitude;
-
-            Zone = Math.Floor((Longitude + 180.0) / 6) + 1;
-            GeoUTMConverterXY(DegToRad(Latitude), DegToRad(Longitude), Zone);
-        }
-
-        public void ToLatLon(double X, double Y, int zone, Hemisphere Hemi)
-        {
-            this.X = X;
-            this.Y = Y;
+            this.X = x;
+            this.Y = y;
 
             this.Zone = zone;
 
-            if (Hemi == Hemisphere.Northern)
-            {
-                UTMXYToLatLon(X, Y, false);
-            }
-            else
-            {
-                UTMXYToLatLon(X, Y, true);
-            }
+            UTMXYToLatLon(x, y, hemi != Hemisphere.Northern);
         }
 
         private double DegToRad(double degrees)
@@ -128,7 +115,7 @@ namespace TrafikantenApi.Helpers
 
         }
 
-        private double UTMCentralMeridian(double zone)
+        private double UtmCentralMeridian(double zone)
         {
             return (DegToRad(-183.0 + (zone * 6.0)));
         }
@@ -175,7 +162,7 @@ namespace TrafikantenApi.Helpers
 
         private double[] MapLatLonToXY(double phi, double lambda, double lambda0)
         {
-            double[] xy = new double[2];
+            var xy = new double[2];
 
             double N, nu2, ep2, t, t2, l;
 
@@ -250,7 +237,7 @@ namespace TrafikantenApi.Helpers
 
         private double[] MapXYToLatLon(double x, double y, double lambda0)
         {
-            double[] latlon = new double[2];
+            var latlon = new double[2];
 
             double phif, Nf, Nfpow, nuf2, ep2, tf, tf2, tf4, cf;
             double x1frac, x2frac, x3frac, x4frac, x5frac, x6frac, x7frac, x8frac;
@@ -338,7 +325,7 @@ namespace TrafikantenApi.Helpers
 
         private void GeoUTMConverterXY(double lat, double lon, double zone)
         {
-            double[] xy = MapLatLonToXY(lat, lon, UTMCentralMeridian(zone));
+            var xy = MapLatLonToXY(lat, lon, UtmCentralMeridian(zone));
 
             xy[0] = xy[0] * UTMScaleFactor + 500000.0;
             xy[1] = xy[1] * UTMScaleFactor;
@@ -365,11 +352,11 @@ namespace TrafikantenApi.Helpers
 
             y /= UTMScaleFactor;
 
-            cmeridian = UTMCentralMeridian(Zone);
-            double[] latlon = MapXYToLatLon(x, y, cmeridian);
+            cmeridian = UtmCentralMeridian(Zone);
+            var latlon = MapXYToLatLon(x, y, cmeridian);
 
-            this.Latitude = RadToDeg(latlon[0]);
-            this.Longitude = RadToDeg(latlon[1]);
+            Latitude = RadToDeg(latlon[0]);
+            Longitude = RadToDeg(latlon[1]);
 
 
         }

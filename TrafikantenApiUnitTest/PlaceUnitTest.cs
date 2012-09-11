@@ -1,10 +1,6 @@
-﻿using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using TrafikantenApi.Service.ApiClient;
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 
 namespace TrafikantenApiUnitTest
 {
@@ -14,7 +10,7 @@ namespace TrafikantenApiUnitTest
         [TestMethod]
         public async Task TestFindMatches()
         {
-            var result = await Place.FindMatches("skøyen");
+            var result = await TrafikantenApi.Service.ApiClient.Place.FindMatches("skøyen");
 
             Assert.IsNotNull(result);
             Assert.AreEqual("Skøyen #", result.First().Name);
@@ -23,7 +19,9 @@ namespace TrafikantenApiUnitTest
         [TestMethod]
         public async Task TestFindMatchesByCounties()
         {
-            var result = await Place.FindMatchesByCounties("skøyen", "ostfold", "oslo", "akershus");
+            var result =
+                await
+                TrafikantenApi.Service.ApiClient.Place.FindMatchesByCounties("skøyen", "ostfold", "oslo", "akershus");
 
             Assert.IsNotNull(result);
             Assert.AreEqual("Skøyen #", result.First().Name);
@@ -32,7 +30,9 @@ namespace TrafikantenApiUnitTest
         [TestMethod]
         public async Task TestFindPlacesByCounties()
         {
-            var result = await Place.FindPlacesByCounties("skøyen", "ostfold", "oslo", "akershus");
+            var result =
+                await
+                TrafikantenApi.Service.ApiClient.Place.FindPlacesByCounties("skøyen", "ostfold", "oslo", "akershus");
 
             Assert.IsNotNull(result);
             Assert.AreEqual("Skøyen #", result.First().Name);
@@ -41,7 +41,7 @@ namespace TrafikantenApiUnitTest
         [TestMethod]
         public async Task TestFindPlaceBasedOnId()
         {
-            var result = await Place.FindPlaceBasedOnPlaceId(3011320, "skøyen");
+            var result = await TrafikantenApi.Service.ApiClient.Place.FindPlaceBasedOnPlaceId(3011320, "skøyen");
 
             Assert.IsNotNull(result);
             Assert.AreEqual("Skøyenåsen [T-bane]", result.Name);
@@ -50,7 +50,7 @@ namespace TrafikantenApiUnitTest
         [TestMethod]
         public async Task TestGetStopsByPlaceId()
         {
-            var result = await Place.GetStopsByPlaceId(1000023243);
+            var result = await TrafikantenApi.Service.ApiClient.Place.GetStopsByPlaceId(1000023243);
 
             Assert.IsNotNull(result);
             Assert.AreEqual("Skøyen [tog]", result.First().Name);
@@ -59,7 +59,8 @@ namespace TrafikantenApiUnitTest
         [TestMethod]
         public async Task TestGetClosestStopsByCoordinates()
         {
-            var result = await Place.GetClosestStopsByCoordinates(593918, 6644077, 7);
+            var result =
+                await TrafikantenApi.Service.ApiClient.Place.GetClosestStopsByCoordinates(593918, 6644077, 7);
 
             Assert.IsNotNull(result);
             Assert.AreEqual("Skøyenbrua (i Hoffsveien)", result.First().Name);
@@ -68,7 +69,9 @@ namespace TrafikantenApiUnitTest
         [TestMethod]
         public async Task TestGetClosestStopsAdvancedByCoordinates()
         {
-            var result = await Place.GetClosestStopsAdvancedByCoordinates(593918, 6644077, 8, 1200);
+            var result =
+                await
+                TrafikantenApi.Service.ApiClient.Place.GetClosestStopsAdvancedByCoordinates(593918, 6644077, 8, 1200);
 
             Assert.IsNotNull(result);
             Assert.AreEqual("Skøyenbrua (i Hoffsveien)", result.First().Name);
@@ -77,7 +80,7 @@ namespace TrafikantenApiUnitTest
         [TestMethod]
         public async Task TestGetLines()
         {
-            var result = await Place.GetLines(3010010);
+           var result = await TrafikantenApi.Service.ApiClient.Place.GetLines(3010010);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(300, result.First().LineID);
@@ -86,11 +89,10 @@ namespace TrafikantenApiUnitTest
         [TestMethod]
         public async Task TestAutocomplete()
         {
-            var result = await Place.AutoComplete("lysak");
+            var result = await TrafikantenApi.Service.ApiClient.Place.AutoComplete("lysak");
 
             Assert.IsNotNull(result);
             Assert.AreEqual("Lysaker #", result.First().Name);
         }
-
     }
 }

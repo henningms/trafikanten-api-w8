@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Net;
+﻿using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
-using System.Windows;
 
 namespace TrafikantenApi.Models
 {

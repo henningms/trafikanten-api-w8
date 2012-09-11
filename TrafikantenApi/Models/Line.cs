@@ -1,7 +1,4 @@
-﻿using System;
-using System.Net;
-using System.Runtime.Serialization;
-using System.Windows;
+﻿using System.Runtime.Serialization;
 
 namespace TrafikantenApi.Models
 {
